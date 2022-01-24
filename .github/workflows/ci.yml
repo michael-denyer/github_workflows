@@ -22,7 +22,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel
-        pip install black flake8 flake8-bandit lizard pylint pylint-mccabe pytest pytest-benchmark pytest-sugar
+        pip install flake8 flake8-bandit pylint pylint-mccabe pytest pytest-benchmark pytest-sugar
     - name: install testing package requirements
       run: |
         pip install -r test/requirements.txt
