@@ -1,0 +1,41 @@
+name: canfam_gremlin_CI
+
+on: workflow_call
+
+jobs:
+
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - uses: actions/cache@v2
+      with:
+        path: ${{ env.pythonLocation }}
+        key: ${{ env.pythonLocation }}-pip-${{ hashFiles('test/requirements.txt') }}
+        restore-keys: ${{ env.pythonLocation }}-pip
+    - name: install dependencies and packages
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel
+        pip install black flake8 flake8-bandit lizard pylint pylint-mccabe pytest pytest-benchmark pytest-sugar
+    - name: install testing package requirements
+      run: |
+        pip install -r test/requirements.txt
+    - name: flake8-bandit
+      run: flake8 . --exit-zero --max-complexity=10 --max-line-length=127
+      if: always()
+    - name: Analysing the code with pylint
+      run: |
+        echo $(git ls-files '*.py')
+        pylint $(git ls-files '*.py') --fail-under=9
+      if: always()
+    - name: upload points and polygons diagram
+      uses: actions/upload-artifact@v2
+      with:
+          name: points_and_polygons
+          path: ${{ github.workspace }}/test/output/points_and_polygons.png
