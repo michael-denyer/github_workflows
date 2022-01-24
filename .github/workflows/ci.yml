@@ -34,6 +34,10 @@ jobs:
         echo $(git ls-files '*.py')
         pylint $(git ls-files '*.py') --fail-under=9
       if: always()
+    - name: run tests
+      run: |
+        pytest --rootdir=. --color=yes
+      if: always()
     - name: upload points and polygons diagram
       uses: actions/upload-artifact@v2
       with:
