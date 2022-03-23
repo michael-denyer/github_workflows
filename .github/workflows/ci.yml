@@ -1,4 +1,4 @@
-name: canfam_gremlin_CI
+name: python_CI
 
 on: workflow_call
 
@@ -23,9 +23,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel
         pip install flake8 flake8-bandit pylint pylint-mccabe pytest pytest-benchmark pytest-sugar
-    - name: install testing package requirements
+    - name: install testing requirements
       run: |
         pip install -r test/requirements.txt
+    - name: install project packages 
+      run: |
+        pip install -r requirements.txt
+        python setup.py install
+      if: always()
     - name: flake8-bandit
       run: flake8 . --exit-zero --max-complexity=10 --max-line-length=127
       if: always()
