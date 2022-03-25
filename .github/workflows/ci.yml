@@ -17,17 +17,22 @@ jobs:
       with:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-pip-${{ hashFiles('test/requirements.txt') }}
-        restore-keys: ${{ env.pythonLocation }}-pip
-#     - name: Set up GCC
-#       uses: egor-tensin/setup-gcc@v1
-#       with:
-#         version: latest
-#         platform: x64  
+        restore-keys: ${{ env.pythonLocation }}-pip 
+    - name: Check for install.sh
+      id: check_install
+      uses: andstor/file-existence-action@v1
+      with:
+        files: ".github/install.sh"
+    - name: Run install.sh if it exists
+      if: steps.check_install.outputs.files_exists == 'true'
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade
+        ./github/install.sh
     - name: install dependencies and packages
       run: |
         sudo apt-get update
         sudo apt-get upgrade
-        sudo apt-get install libcurl4-openssl-dev
         python -m pip install --upgrade pip
         pip install setuptools wheel
         pip install flake8 flake8-bandit pylint pylint-mccabe pytest pytest-benchmark pytest-sugar
