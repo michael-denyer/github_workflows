@@ -28,7 +28,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get upgrade
-        ./github/install.sh
+        ./.github/install.sh
     - name: install dependencies and packages
       run: |
         sudo apt-get update
