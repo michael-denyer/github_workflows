@@ -38,8 +38,16 @@ jobs:
     - name: install project packages 
       run: |
         pip install -r requirements.txt
-        python setup.py install
       if: always()
+    - name: Check for existence of setup.py
+      id: check_setup
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "setup.py"  
+    - name: Run setup.py to install as a package if it exists
+      if: steps.check_setup.outputs.files_exists == 'true'
+      run: |
+        python setup.py install
     - name: flake8-bandit
       run: flake8 . --exit-zero --max-complexity=10 --max-line-length=127
       if: always()
