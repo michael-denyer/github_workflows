@@ -18,21 +18,17 @@ jobs:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-pip-${{ hashFiles('test/requirements.txt') }}
         restore-keys: ${{ env.pythonLocation }}-pip 
-    - name: Check for install.sh
+    - name: Check for existence of ./github/install.sh
       id: check_install
       uses: andstor/file-existence-action@v1
       with:
         files: ".github/install.sh"
-    - name: Run install.sh if it exists
+    - name: Run ./github/install.sh if it exists
       if: steps.check_install.outputs.files_exists == 'true'
       run: |
-        sudo apt-get update
-        sudo apt-get upgrade
         ./.github/install.sh
-    - name: install dependencies and packages
+    - name: install ci packages
       run: |
-        sudo apt-get update
-        sudo apt-get upgrade
         python -m pip install --upgrade pip
         pip install setuptools wheel
         pip install flake8 flake8-bandit pylint pylint-mccabe pytest pytest-benchmark pytest-sugar
