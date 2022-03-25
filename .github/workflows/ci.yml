@@ -18,13 +18,15 @@ jobs:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-pip-${{ hashFiles('test/requirements.txt') }}
         restore-keys: ${{ env.pythonLocation }}-pip
-    - name: Set up GCC
-      uses: egor-tensin/setup-gcc@v1
-      with:
-        version: latest
-        platform: x64  
+#     - name: Set up GCC
+#       uses: egor-tensin/setup-gcc@v1
+#       with:
+#         version: latest
+#         platform: x64  
     - name: install dependencies and packages
       run: |
+        sudo apt-get update
+        sudo apt-get upgrade
         sudo apt-get install libcurl4-openssl-dev
         python -m pip install --upgrade pip
         pip install setuptools wheel
@@ -49,8 +51,8 @@ jobs:
       run: |
         pytest --rootdir=. --color=yes
       if: always()
-    - name: upload points and polygons diagram
-      uses: actions/upload-artifact@v2
-      with:
-          name: points_and_polygons
-          path: ${{ github.workspace }}/test/output/points_and_polygons.png
+#     - name: upload points and polygons diagram
+#       uses: actions/upload-artifact@v2
+#       with:
+#           name: points_and_polygons
+#           path: ${{ github.workspace }}/test/output/points_and_polygons.png
