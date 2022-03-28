@@ -32,9 +32,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel
         pip install flake8 flake8-bandit pylint pylint-mccabe pytest pytest-benchmark pytest-sugar
+    - name: Check for existence of testing requirements
+      id: check_test_reqs
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "requirements.txt"  
     - name: install testing requirements
       run: |
         pip install -r test/requirements.txt
+      if: steps.check_test_reqs.outputs.files_exists == 'true'
     - name: Check for existence of project requirements
       id: check_reqs
       uses: andstor/file-existence-action@v1
@@ -69,6 +75,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: resource
-        path: "/test/output/*"
+        path: "/test/output/*.*"
         if-no-files-found: warn
       if: always()
