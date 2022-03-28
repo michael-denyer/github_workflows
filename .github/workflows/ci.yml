@@ -60,8 +60,19 @@ jobs:
       run: |
         pytest --rootdir=. --color=yes
       if: always()
-#     - name: upload points and polygons diagram
-#       uses: actions/upload-artifact@v2
-#       with:
-#           name: points_and_polygons
-#           path: ${{ github.workspace }}/test/output/points_and_polygons.png
+    - name: Check for existence of ./github/resource
+      id: check_resource
+      uses: andstor/file-existence-action@v1
+      with:
+        files: ".github/resource"
+    - name: Set resource variable (if it exists)
+      if: steps.check_resource.outputs.files_exists == 'true'
+      run: |
+        res=$(cat resource)
+        echo "RESOURCE=$RES" >> $GITHUB_ENV
+    - name: upload resource (if it exists)
+      uses: actions/upload-artifact@v2
+      if: steps.check_resource.outputs.files_exists == 'true'
+      with:
+          name: resource
+          path: ${{ github.workspace }}${{ env.RESOURCE }}
