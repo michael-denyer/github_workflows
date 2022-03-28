@@ -64,7 +64,7 @@ jobs:
       id: check_resource
       uses: andstor/file-existence-action@v1
       with:
-        files: ".github/resource.txt"
+        paths: ".github/resource.txt"
     - name: Set resource variable (if it exists)
       if: steps.check_resource.outputs.files_exists == 'true'
       run: |
