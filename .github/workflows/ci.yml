@@ -71,10 +71,10 @@ jobs:
       run: |
         pytest --rootdir=. --color=yes
       if: always()
-    - name: upload artifacts folder
+    - name: upload /test/output folder artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: resource
+        name: test_output
         path: "./test/output/"
         if-no-files-found: warn
       if: always()
