@@ -68,7 +68,7 @@ jobs:
       if: always()
     - name: Set resource variable (if it exists)
       run: |
-        RESORUCE=$(cat resource.txt)
+        RESOURCE=$(cat resource.txt)
         echo "RESOURCE=$RES" >> $GITHUB_ENV
       if: steps.check_resource.outputs.files_exists == 'true'
     - name: upload resource (if it exists)
