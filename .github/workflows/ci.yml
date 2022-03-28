@@ -69,6 +69,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: resource
-        path: "/artifact/*"
+        path: "/test/output/*"
         if-no-files-found: warn
       if: always()
