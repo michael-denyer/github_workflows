@@ -68,14 +68,12 @@ jobs:
       if: always()
     - name: Set resource variable (if it exists)
       run: |
-        RESOURCE=$(cat resource.txt)
+        RESOURCE=$(cat .github/resource.txt)
         echo "RESOURCE=$RES" >> $GITHUB_ENV
-      if: always()
-#       if: steps.check_resource.outputs.files_exists == 'true'
+      if: steps.check_resource.outputs.files_exists == 'true'
     - name: upload resource (if it exists)
       uses: actions/upload-artifact@v2
       with:
           name: resource
           path: ${{ format('{0}/{1}',github.workspace, env.RESOURCE) }}
-      if: always()
-#       if: steps.check_resource.outputs.files_exists == 'true'
+      if: steps.check_resource.outputs.files_exists == 'true'
