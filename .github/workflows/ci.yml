@@ -70,7 +70,7 @@ jobs:
       run: |
         RESOURCE=$(cat .github/resource.txt)
         echo "RESOURCE=$RES" >> $GITHUB_ENV
-      if: steps.check_install.outputs.files_exists == 'false'
+      if: always()
     - name: upload resource (if it exists)
       uses: actions/upload-artifact@v2
       with:
