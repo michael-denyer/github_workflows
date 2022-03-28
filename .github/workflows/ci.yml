@@ -18,12 +18,12 @@ jobs:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-pip-${{ hashFiles('test/requirements.txt') }}
         restore-keys: ${{ env.pythonLocation }}-pip 
-    - name: Check for existence of ./github/install.sh
+    - name: Check for existence of .github/install.sh
       id: check_install
       uses: andstor/file-existence-action@v1
       with:
         files: ".github/install.sh"
-    - name: Run ./github/install.sh if it exists
+    - name: Run .github/install.sh if it exists
       if: steps.check_install.outputs.files_exists == 'true'
       run: |
         ./.github/install.sh
@@ -64,15 +64,15 @@ jobs:
       id: check_resource
       uses: andstor/file-existence-action@v1
       with:
-        files: ".github/resource"
+        files: ".github/resource.txt"
     - name: Set resource variable (if it exists)
       if: steps.check_resource.outputs.files_exists == 'true'
       run: |
         res=$(cat resource)
         echo "RESOURCE=$RES" >> $GITHUB_ENV
     - name: upload resource (if it exists)
-      uses: actions/upload-artifact@v2
       if: steps.check_resource.outputs.files_exists == 'true'
+      uses: actions/upload-artifact@v2
       with:
           name: resource
           path: ${{ github.workspace }}${{ env.RESOURCE }}
