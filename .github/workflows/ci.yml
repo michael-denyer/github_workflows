@@ -35,10 +35,15 @@ jobs:
     - name: install testing requirements
       run: |
         pip install -r test/requirements.txt
-    - name: install project packages 
+    - name: Check for existence of project requirements
+      id: check_reqs
+      uses: andstor/file-existence-action@v1
+      with:
+        files: "requirements.txt"  
+    - name: install project requirements
       run: |
         pip install -r requirements.txt
-      if: always()
+      if: steps.check_reqs.outputs.files_exists == 'true'
     - name: Check for existence of setup.py
       id: check_setup
       uses: andstor/file-existence-action@v1
@@ -60,20 +65,10 @@ jobs:
       run: |
         pytest --rootdir=. --color=yes
       if: always()
-    - name: Check for existence of ./github/resource
-      id: check_resource
-      uses: andstor/file-existence-action@v1
+    - name: upload artifacts folder
+      uses: actions/upload-artifact@v3
       with:
-        files: ".github/resource.txt"
+        name: resource
+        path: "/artifact/*"
+        if-no-files-found: warn
       if: always()
-    - name: Set resource variable (if it exists)
-      run: |
-        RESOURCE=$(cat .github/resource.txt)
-        echo "RESOURCE=$RES" >> $GITHUB_ENV
-      if: always()
-    - name: upload resource (if it exists)
-      uses: actions/upload-artifact@v2
-      with:
-          name: resource
-          path: ${{ format('{0}/{1}',github.workspace, env.RESOURCE) }}
-      if: steps.check_resource.outputs.files_exists == 'true'
