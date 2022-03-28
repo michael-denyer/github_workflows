@@ -36,7 +36,7 @@ jobs:
       id: check_test_reqs
       uses: andstor/file-existence-action@v1
       with:
-        files: "requirements.txt"  
+        files: "test/requirements.txt"  
     - name: install testing requirements
       run: |
         pip install -r test/requirements.txt
@@ -75,6 +75,6 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: resource
-        path: "/test/output/*.*"
+        path: "./test/output/"
         if-no-files-found: warn
       if: always()
