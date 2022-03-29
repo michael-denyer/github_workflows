@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: setup python
+    - name: Setup python
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
@@ -23,11 +23,11 @@ jobs:
       uses: andstor/file-existence-action@v1
       with:
         files: ".github/install.sh"
-    - name: Run .github/install.sh if it exists
+    - name: Run .github/install.sh
       if: steps.check_install.outputs.files_exists == 'true'
       run: |
         ./.github/install.sh
-    - name: install ci packages
+    - name: Install CI requirements
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel
@@ -37,7 +37,7 @@ jobs:
       uses: andstor/file-existence-action@v1
       with:
         files: "test/requirements.txt"  
-    - name: install testing requirements
+    - name: Install testing requirements
       run: |
         pip install -r test/requirements.txt
       if: steps.check_test_reqs.outputs.files_exists == 'true'
@@ -46,7 +46,7 @@ jobs:
       uses: andstor/file-existence-action@v1
       with:
         files: "requirements.txt"  
-    - name: install project requirements
+    - name: Install project requirements
       run: |
         pip install -r requirements.txt
       if: steps.check_reqs.outputs.files_exists == 'true'
@@ -55,23 +55,23 @@ jobs:
       uses: andstor/file-existence-action@v1
       with:
         files: "setup.py"  
-    - name: Run setup.py to install as a package if it exists
+    - name: Run setup.py to install as a package
       if: steps.check_setup.outputs.files_exists == 'true'
       run: |
         python setup.py install
-    - name: flake8-bandit
+    - name: Flake8-bandit
       run: flake8 . --exit-zero --max-complexity=10 --max-line-length=127
       if: always()
-    - name: Analysing the code with pylint
+    - name: Analyse the code with pylint
       run: |
         echo $(git ls-files '*.py')
         pylint $(git ls-files '*.py') --fail-under=9
       if: always()
-    - name: run tests
+    - name: Run tests
       run: |
         pytest --rootdir=. --color=yes
       if: always()
-    - name: upload /test/output folder artifacts
+    - name: Upload /test/output folder artifacts
       uses: actions/upload-artifact@v3
       with:
         name: test_output
