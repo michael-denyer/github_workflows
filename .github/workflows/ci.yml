@@ -64,9 +64,9 @@ jobs:
         flake8 . --exit-zero --max-complexity=10 --max-line-length=127
       if: always()
     - name: Bandit
-      run: bandit . -r
+      run: bandit . -r --exclude /test
       if: always()
-    - name: Ochrona
+    - name: Ochrona (highlights known package vulnerabilities)
       run: ochrona .
       if: always()
     - name: Analyse the code with pylint
