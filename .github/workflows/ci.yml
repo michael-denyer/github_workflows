@@ -40,7 +40,6 @@ jobs:
     - name: Install testing requirements
       run: |
         pip install -r test/requirements.txt
-    - name: flake8
       if: steps.check_test_reqs.outputs.files_exists == 'true'
     - name: Check for existence of project requirements
       id: check_reqs
