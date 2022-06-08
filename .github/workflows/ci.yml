@@ -17,7 +17,7 @@ jobs:
       with:
         path: ${{ env.pythonLocation }}
         key: ${{ env.pythonLocation }}-pip-${{ hashFiles('test/requirements.txt') }}
-        restore-keys: ${{ env.pythonLocation }}-pip 
+        restore-keys: ${{ env.pythonLocation }}-pip
     - name: Check for existence of .github/install.sh
       id: check_install
       uses: andstor/file-existence-action@v1
@@ -31,21 +31,22 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install setuptools wheel
-        pip install flake8 flake8-bandit pylint pylint-mccabe pytest pytest-benchmark pytest-sugar
+        pip install flake8 bandit pylint pylint-mccabe ochrona pytest pytest-benchmark pytest-sugar
     - name: Check for existence of testing requirements
       id: check_test_reqs
       uses: andstor/file-existence-action@v1
       with:
-        files: "test/requirements.txt"  
+        files: "test/requirements.txt"
     - name: Install testing requirements
       run: |
         pip install -r test/requirements.txt
+    - name: flake8
       if: steps.check_test_reqs.outputs.files_exists == 'true'
     - name: Check for existence of project requirements
       id: check_reqs
       uses: andstor/file-existence-action@v1
       with:
-        files: "requirements.txt"  
+        files: "requirements.txt"
     - name: Install project requirements
       run: |
         pip install -r requirements.txt
@@ -54,13 +55,20 @@ jobs:
       id: check_setup
       uses: andstor/file-existence-action@v1
       with:
-        files: "setup.py"  
+        files: "setup.py"
     - name: Run setup.py to install as a package
       if: steps.check_setup.outputs.files_exists == 'true'
       run: |
         python setup.py install
-    - name: Flake8-bandit
-      run: flake8 . --exit-zero --max-complexity=10 --max-line-length=127
+    - name: Flake8
+      run: |
+        flake8 . --exit-zero --max-complexity=10 --max-line-length=127
+      if: always()
+    - name: Bandit
+      run: bandit . -r
+      if: always()
+    - name: Ochrona
+      run: ochrona .
       if: always()
     - name: Analyse the code with pylint
       run: |
